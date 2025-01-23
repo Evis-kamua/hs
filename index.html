@@ -33,9 +33,14 @@
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .logo img {
+            width: 200px;
+            height: auto;
         }
 
         .category {
@@ -95,7 +100,9 @@
     <div class="container">
         <!-- Left Section -->
         <div class="left-section">
-            <div class="logo">HÄMEEN SANOMAT</div>
+            <div class="logo">
+                <img src="hameensanomat.svg" alt="Hämeen Sanomat Logo">
+            </div>
             <div class="category">Tuoreimmat</div>
             <div class="headline" id="rssTitle">Loading...</div>
             <div class="description" id="rssDescription">Loading...</div>
@@ -117,7 +124,7 @@
     </div>
 
     <script>
-        const feedUrl = "https://www.hameensanomat.fi/feed/rss/";
+        const feedUrl = "YOUR_RSS_FEED_URL_HERE";
         const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
 
         async function fetchRSS() {
