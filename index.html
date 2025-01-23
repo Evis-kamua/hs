@@ -6,7 +6,7 @@
     <title>RSS Feed Example</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Ledger, sans-serif;
             margin: 0;
             padding: 0;
             background-color: white;
@@ -39,7 +39,7 @@
         }
 
         .logo img {
-            width: 200px;
+            width: 300px;
             height: auto;
         }
 
@@ -124,7 +124,7 @@
     </div>
 
     <script>
-        const feedUrl = "YOUR_RSS_FEED_URL_HERE";
+        const feedUrl = "https://www.hameensanomat.fi/feed/rss/";
         const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
 
         async function fetchRSS() {
