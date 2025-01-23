@@ -80,33 +80,38 @@
     </div>
 
     <script>
-        const feedUrl = "https://www.hameensanomat.fi/feed/rss/?latest=true"; // Replace with your RSS feed URL
+        const feedUrl = "https://www.hameensanomat.fi/feed/rss/?latest=true"; // RSS-syötteen URL
+const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
 
-        async function fetchRSS() {
-            try {
-                const response = await fetch(feedUrl);
-                const text = await response.text();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(text, "application/xml");
+async function fetchRSS() {
+    try {
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
 
-                // Get the first item
-                const firstItem = xml.querySelector("item");
-                const title = firstItem.querySelector("title").textContent;
-                const description = firstItem.querySelector("description").textContent;
-                const pubDate = firstItem.querySelector("pubDate").textContent;
-                const imageUrl = firstItem.querySelector("media\\:content")?.getAttribute("url") || "default.jpg";
+        // Tarkistetaan, onko syötteen tietoja
+        if (data && data.items && data.items.length > 0) {
+            const firstItem = data.items[0];
+            const title = firstItem.title;
+            const description = firstItem.description || "";
+            const pubDate = firstItem.pubDate;
+            const imageUrl = firstItem.enclosure?.link || "default.jpg";
 
-                // Update the HTML
-                document.getElementById("rssTitle").textContent = title;
-                document.getElementById("rssDescription").textContent = description.split(".")[0] + ".";
-                document.getElementById("rssImage").src = imageUrl;
-                document.getElementById("rssDate").textContent = new Date(pubDate).toLocaleString();
-            } catch (error) {
-                console.error("Error fetching RSS feed:", error);
-            }
+            // Päivitä HTML
+            document.getElementById("rssTitle").textContent = title;
+            document.getElementById("rssDescription").textContent = description.split(".")[0] + ".";
+            document.getElementById("rssImage").src = imageUrl;
+            document.getElementById("rssDate").textContent = new Date(pubDate).toLocaleString();
+        } else {
+            document.getElementById("rssTitle").textContent = "No news available";
         }
+    } catch (error) {
+        console.error("Error fetching RSS feed:", error);
+        document.getElementById("rssTitle").textContent = "Failed to load news.";
+    }
+}
 
-        fetchRSS();
+fetchRSS();
+
     </script>
 </body>
 </html>
