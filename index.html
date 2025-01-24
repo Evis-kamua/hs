@@ -19,11 +19,14 @@
         }
 
         .container {
-            width: 100%;
-            max-width: 1200px;
+            width: 1920px;
+            height: 1080px;
+            border: 1px solid black; /* Alueen reunaviiva */
             display: grid;
             grid-template-columns: 1fr 50px 1fr;
             gap: 50px;
+            position: relative;
+            overflow: hidden;
         }
 
         .left-section {
@@ -31,6 +34,12 @@
             flex-direction: column;
             gap: 20px;
             width: 100%;
+            opacity: 0; /* Aluksi piilossa */
+            transition: opacity 1s ease; /* Fade-in/fade-out */
+        }
+
+        .visible {
+            opacity: 1; /* Näkyvä tila */
         }
 
         .logo {
@@ -65,7 +74,7 @@
         .qr-code {
             margin-top: 20px;
             display: flex;
-            align-items: center;
+            justify-content: flex-start;
         }
 
         .qr-code canvas {
@@ -91,7 +100,7 @@
 <body>
     <div class="container">
         <!-- Left Section -->
-        <div class="left-section">
+        <div class="left-section" id="leftSection">
             <div class="logo">
                 <img src="hameensanomat.svg" alt="Hämeen Sanomat Logo">
             </div>
@@ -126,9 +135,14 @@
                 if (data && data.items && data.items.length > 0) {
                     newsItems = data.items;
                     displayNews(newsItems[currentIndex]);
+
                     setInterval(() => {
-                        currentIndex = (currentIndex + 1) % newsItems.length; // Siirry seuraavaan uutiseen
-                        displayNews(newsItems[currentIndex]);
+                        fadeOut();
+                        setTimeout(() => {
+                            currentIndex = (currentIndex + 1) % newsItems.length; // Siirry seuraavaan uutiseen
+                            displayNews(newsItems[currentIndex]);
+                            fadeIn();
+                        }, 1000); // Fade-out kestää 1 sekunti
                     }, 7000); // Vaihda uutinen 7 sekunnin välein
                 } else {
                     document.getElementById("rssTitle").textContent = "No news available";
@@ -156,6 +170,14 @@
                     if (error) console.error(error);
                 });
             }
+        }
+
+        function fadeOut() {
+            document.getElementById("leftSection").classList.remove("visible");
+        }
+
+        function fadeIn() {
+            document.getElementById("leftSection").classList.add("visible");
         }
 
         fetchRSS();
