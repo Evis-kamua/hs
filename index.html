@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Feed Example</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
             font-family: 'Ledger', serif; /* Google Fonts: Ledger */
@@ -153,7 +154,7 @@
             }
         }
 
-       function displayNews(item) {
+     function displayNews(item) {
     // Päivitä otsikko ja kuvaus
     document.getElementById("rssTitle").textContent = item.title;
     document.getElementById("rssDescription").textContent =
@@ -162,18 +163,20 @@
     // Päivitä kuva
     document.getElementById("rssImage").src = item.enclosure?.link || "default.jpg";
 
-    // Luo QR-koodi Google Chart API:lla
+    // Luo QR-koodi QRCode.js:llä
     const qrCodeContainer = document.getElementById("qrCode");
     qrCodeContainer.innerHTML = ""; // Tyhjennä vanha QR-koodi
     if (item.guid) {
-        const qrCodeImg = document.createElement("img");
-        qrCodeImg.src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(item.guid)}`;
-        qrCodeImg.alt = "QR Code";
-        qrCodeContainer.appendChild(qrCodeImg);
+        const qrCode = new QRCode(qrCodeContainer, {
+            text: item.guid,
+            width: 150,
+            height: 150,
+        });
     } else {
         qrCodeContainer.textContent = "QR-koodi ei saatavilla";
     }
 }
+
 
         function fadeOut() {
             document.getElementById("leftSection").classList.remove("visible");
