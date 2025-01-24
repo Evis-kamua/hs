@@ -96,6 +96,18 @@
             object-fit: cover;
             border: 1px solid #ddd;
         }
+
+        /* Vaakamallinen layout (16:9) */
+body.landscape .container {
+    grid-template-columns: 1fr 50px 1fr; /* Nykyinen vaakasuuntainen layout */
+}
+
+/* Pystymallinen layout (9:16) */
+body.portrait .container {
+    grid-template-columns: 1fr; /* Muokkaa layoutia pystysuunnassa */
+    gap: 20px;
+    justify-items: center; /* Keskittää sisällön */
+}        
     </style>
 </head>
 <body>
@@ -187,6 +199,28 @@
         }
 
         fetchRSS();
+        
+window.onload = () => {
+    // Tunnista ikkunan leveys ja korkeus
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Laske kuvasuhde
+    const aspectRatio = width / height;
+
+    // Pystymallin ja vaakamallin tunnistus
+    if (aspectRatio > 1) {
+        // Vaakamallinen näyttö (esim. 16:9)
+        document.body.classList.add('landscape');
+        document.body.classList.remove('portrait');
+    } else {
+        // Pystymallinen näyttö (esim. 9:16)
+        document.body.classList.add('portrait');
+        document.body.classList.remove('landscape');
+    }
+};
+
+        
     </script>
 </body>
 </html>
