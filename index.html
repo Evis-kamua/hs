@@ -154,24 +154,24 @@
         }
 
         function displayNews(item) {
-            // Päivitä otsikko ja kuvaus
-            document.getElementById("rssTitle").textContent = item.title;
-            document.getElementById("rssDescription").textContent =
-                (item.description || "").split(".")[0] + ".";
+    // Päivitä otsikko ja kuvaus
+    document.getElementById("rssTitle").textContent = item.title;
+    document.getElementById("rssDescription").textContent =
+        (item.description || "").split(".")[0] + ".";
 
-            // Päivitä kuva
-            document.getElementById("rssImage").src = item.enclosure?.link || "default.jpg";
+    // Päivitä kuva
+    document.getElementById("rssImage").src = item.enclosure?.link || "default.jpg";
 
-            // Luo QR-koodi
-            const qrCodeContainer = document.getElementById("qrCode");
-            qrCodeContainer.innerHTML = ""; // Tyhjennä vanha QR-koodi
-            if (item.guid) {
-                QRCode.toCanvas(qrCodeContainer, item.guid, { width: 100 }, (error) => {
-                    if (error) console.error(error);
-                });
-            }
-        }
-
+    // Luo QR-koodi Google Chart API:lla
+    const qrCodeContainer = document.getElementById("qrCode");
+    qrCodeContainer.innerHTML = ""; // Tyhjennä vanha QR-koodi
+    if (item.guid) {
+        const qrCodeImg = document.createElement("img");
+        qrCodeImg.src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(item.guid)}`;
+        qrCodeImg.alt = "QR Code";
+        qrCodeContainer.appendChild(qrCodeImg);
+    }
+}
         function fadeOut() {
             document.getElementById("leftSection").classList.remove("visible");
         }
