@@ -62,6 +62,16 @@
             line-height: 1.5;
         }
 
+        .qr-code {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .qr-code canvas {
+            margin: 0 auto;
+        }
+
         .right-section {
             display: flex;
             flex-direction: column;
@@ -76,10 +86,6 @@
             object-fit: cover;
             border: 1px solid #ddd;
         }
-
-        .qr-code {
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -92,6 +98,7 @@
             <div class="category">Tuoreimmat</div>
             <div class="headline" id="rssTitle">Loading...</div>
             <div class="description" id="rssDescription">Loading...</div>
+            <div class="qr-code" id="qrCode"></div>
         </div>
 
         <!-- Spacer -->
@@ -102,7 +109,6 @@
             <div class="image-container">
                 <img id="rssImage" src="default.jpg" alt="News Image">
             </div>
-            <div class="qr-code" id="qrCode"></div>
         </div>
     </div>
 
@@ -146,7 +152,7 @@
             const qrCodeContainer = document.getElementById("qrCode");
             qrCodeContainer.innerHTML = ""; // Tyhjennä vanha QR-koodi
             if (item.guid) {
-                QRCode.toCanvas(qrCodeContainer, item.guid, { width: 150 }, (error) => {
+                QRCode.toCanvas(qrCodeContainer, item.guid, { width: 100 }, (error) => {
                     if (error) console.error(error);
                 });
             }
