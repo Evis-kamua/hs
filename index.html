@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Feed Example</title>
-<link href="https://fonts.googleapis.com/css2?family=Ledger&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <style>
-     body {
-    font-family: 'Ledger', serif;
-    margin: 0;
-    padding: 0;
-    background-color: white;
-    color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
+        body {
+            font-family: 'Ledger', serif; /* Google Fonts: Ledger */
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
         .container {
             width: 100%;
             max-width: 1200px;
             display: grid;
             grid-template-columns: 1fr 50px 1fr;
-            gap: 0;
+            gap: 50px;
         }
 
         .left-section {
@@ -39,7 +40,7 @@
         }
 
         .logo img {
-            width: 300px;
+            width: 200px;
             height: auto;
         }
 
@@ -64,6 +65,8 @@
         .right-section {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
         }
 
@@ -74,25 +77,8 @@
             border: 1px solid #ddd;
         }
 
-        .related-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .related-items {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .related-items li {
-            font-size: 14px;
-            margin: 5px 0;
-        }
-
-        .spacer {
-            width: 50px;
+        .qr-code {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -116,16 +102,15 @@
             <div class="image-container">
                 <img id="rssImage" src="default.jpg" alt="News Image">
             </div>
-            <div class="related-title">Muut aiheet</div>
-            <ul class="related-items" id="relatedItems">
-                <li>Loading...</li>
-            </ul>
+            <div class="qr-code" id="qrCode"></div>
         </div>
     </div>
 
     <script>
         const feedUrl = "https://www.hameensanomat.fi/feed/rss/";
         const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+        let currentIndex = 0;
+        let newsItems = [];
 
         async function fetchRSS() {
             try {
@@ -133,28 +118,37 @@
                 const data = await response.json();
 
                 if (data && data.items && data.items.length > 0) {
-                    // Pääuutinen
-                    const firstItem = data.items[0];
-                    document.getElementById("rssTitle").textContent = firstItem.title;
-                    document.getElementById("rssDescription").textContent =
-                        (firstItem.description || "").split(".")[0] + ".";
-                    document.getElementById("rssImage").src = firstItem.enclosure?.link || "default.jpg";
-
-                    // Muut aiheet
-                    const relatedItems = data.items.slice(1, 4); // Näytetään seuraavat 3 uutista
-                    const relatedList = document.getElementById("relatedItems");
-                    relatedList.innerHTML = ""; // Tyhjennetään oletus "Loading..."
-                    relatedItems.forEach((item) => {
-                        const li = document.createElement("li");
-                        li.textContent = item.title;
-                        relatedList.appendChild(li);
-                    });
+                    newsItems = data.items;
+                    displayNews(newsItems[currentIndex]);
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % newsItems.length; // Siirry seuraavaan uutiseen
+                        displayNews(newsItems[currentIndex]);
+                    }, 7000); // Vaihda uutinen 7 sekunnin välein
                 } else {
                     document.getElementById("rssTitle").textContent = "No news available";
                 }
             } catch (error) {
                 console.error("Error fetching RSS feed:", error);
                 document.getElementById("rssTitle").textContent = "Failed to load news.";
+            }
+        }
+
+        function displayNews(item) {
+            // Päivitä otsikko ja kuvaus
+            document.getElementById("rssTitle").textContent = item.title;
+            document.getElementById("rssDescription").textContent =
+                (item.description || "").split(".")[0] + ".";
+
+            // Päivitä kuva
+            document.getElementById("rssImage").src = item.enclosure?.link || "default.jpg";
+
+            // Luo QR-koodi
+            const qrCodeContainer = document.getElementById("qrCode");
+            qrCodeContainer.innerHTML = ""; // Tyhjennä vanha QR-koodi
+            if (item.guid) {
+                QRCode.toCanvas(qrCodeContainer, item.guid, { width: 150 }, (error) => {
+                    if (error) console.error(error);
+                });
             }
         }
 
