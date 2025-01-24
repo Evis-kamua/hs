@@ -153,7 +153,7 @@
             }
         }
 
-        function displayNews(item) {
+       function displayNews(item) {
     // Päivitä otsikko ja kuvaus
     document.getElementById("rssTitle").textContent = item.title;
     document.getElementById("rssDescription").textContent =
@@ -170,8 +170,11 @@
         qrCodeImg.src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(item.guid)}`;
         qrCodeImg.alt = "QR Code";
         qrCodeContainer.appendChild(qrCodeImg);
+    } else {
+        qrCodeContainer.textContent = "QR-koodi ei saatavilla";
     }
 }
+
         function fadeOut() {
             document.getElementById("leftSection").classList.remove("visible");
         }
