@@ -40,16 +40,6 @@
         .qr-code {
             margin-top: 20px;
         }
-
-        .footer {
-            margin-top: 40px;
-            font-size: 1.2em;
-        }
-
-        .highlight {
-            color: #44ff44;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -59,22 +49,23 @@
         <div class="qr-code">
             <img id="qr-code" src="" alt="QR-koodi">
         </div>
-        <div class="footer">
-            <span class="highlight">HAMEENSANOMAT.fi</span>
-        </div>
     </div>
 
     <script>
         async function fetchRSS() {
             try {
                 const response = await fetch('https://evis-kamua.github.io/hs/rss.json');
+                if (!response.ok) throw new Error('Verkkovastaus ei ollut ok');
                 const data = await response.json();
+                if (!data.articles || data.articles.length === 0) throw new Error('Tyhjä RSS-syöte');
+                
                 const article = data.articles[0];
-                document.getElementById('headline').innerText = article.title;
-                document.getElementById('news-image').src = article.image;
-                document.getElementById('qr-code').src = article.qr;
+                if (article.title) document.getElementById('headline').innerText = article.title;
+                if (article.image) document.getElementById('news-image').src = article.image;
+                if (article.qr) document.getElementById('qr-code').src = article.qr;
             } catch (error) {
-                console.error('RSS-syötteen haku epäonnistui', error);
+                console.error('RSS-syötteen haku epäonnistui:', error);
+                document.getElementById('headline').innerText = 'Uutisia ei voitu ladata';
             }
         }
         fetchRSS();
