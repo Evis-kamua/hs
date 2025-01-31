@@ -1,226 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RSS Feed Example</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>Hämeen Sanomat RSS</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
         body {
-            font-family: 'Ledger', serif; /* Google Fonts: Ledger */
             margin: 0;
-            padding: 0;
-            background-color: white;
-            color: black;
+            font-family: 'Montserrat', sans-serif;
+            background: url('hasa-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            text-align: center;
             min-height: 100vh;
         }
 
         .container {
-            width: 1920px;
-            height: 1080px;
-            border: 1px solid black; /* Alueen reunaviiva */
-            display: grid;
-            grid-template-columns: 1fr 50px 1fr;
-            gap: 50px;
-            padding: 100px; /* Marginaali reunoille */
-            box-sizing: border-box; /* Sisällytetään padding laskettuun leveyteen */
-        }
-
-        .left-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-            opacity: 0; /* Aluksi piilossa */
-            transition: opacity 1s ease; /* Fade-in/fade-out */
-        }
-
-        .visible {
-            opacity: 1; /* Näkyvä tila */
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .logo img {
-            width: 400px;
-            height: auto;
-        }
-
-        .category {
-            font-size: 25px;
-            font-weight: bold;
-            color: #0056b3;
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 5px;
+            max-width: 900px;
+            padding: 20px;
         }
 
         .headline {
-            font-size: 35px;
+            font-size: 2em;
             font-weight: bold;
         }
 
-        .description {
-            font-size: 24px;
-            line-height: 1.5;
+        .news-image {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
         }
 
         .qr-code {
             margin-top: 20px;
-            display: flex;
-            justify-content: flex-start;
         }
 
-        .qr-code canvas {
-            margin: 0 auto;
+        .footer {
+            margin-top: 40px;
+            font-size: 1.2em;
         }
 
-        .right-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
+        .highlight {
+            color: #44ff44;
+            font-weight: bold;
         }
-
-        .image-container img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            border: 1px solid #ddd;
-        }
-
-        /* Vaakamallinen layout (16:9) */
-body.landscape .container {
-    grid-template-columns: 1fr 50px 1fr; /* Nykyinen vaakasuuntainen layout */
-}
-
-/* Pystymallinen layout (9:16) */
-body.portrait .container {
-    grid-template-columns: 1fr; /* Muokkaa layoutia pystysuunnassa */
-    gap: 20px;
-    justify-items: center; /* Keskittää sisällön */
-}        
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Left Section -->
-        <div class="left-section" id="leftSection">
-            <div class="logo">
-                <img src="hameensanomat.svg" alt="Hämeen Sanomat Logo">
-            </div>
-            <div class="category">Tuoreimmat</div>
-            <div class="headline" id="rssTitle">Loading...</div>
-            <div class="description" id="rssDescription">Loading...</div>
-            <div class="qr-code" id="qrCode"></div>
+        <div class="headline" id="headline">Ladataan...</div>
+        <img class="news-image" id="news-image" src="" alt="Uutiskuva">
+        <div class="qr-code">
+            <img id="qr-code" src="" alt="QR-koodi">
         </div>
-
-        <!-- Spacer -->
-        <div class="spacer"></div>
-
-        <!-- Right Section -->
-        <div class="right-section">
-            <div class="image-container">
-                <img id="rssImage" src="default.jpg" alt="News Image">
-            </div>
+        <div class="footer">
+            <span class="highlight">HAMEENSANOMAT.fi</span>
         </div>
     </div>
 
     <script>
-        const feedUrl = "https://www.hameensanomat.fi/feed/rss/";
-        const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
-        let currentIndex = 0;
-        let newsItems = [];
-
         async function fetchRSS() {
             try {
-                const response = await fetch(proxyUrl);
+                const response = await fetch('https://evis-kamua.github.io/hs/rss.json');
                 const data = await response.json();
-
-                if (data && data.items && data.items.length > 0) {
-                    newsItems = data.items;
-                    displayNews(newsItems[currentIndex]);
-
-                    setInterval(() => {
-                        fadeOut();
-                        setTimeout(() => {
-                            currentIndex = (currentIndex + 1) % newsItems.length; // Siirry seuraavaan uutiseen
-                            displayNews(newsItems[currentIndex]);
-                            fadeIn();
-                        }, 1000); // Fade-out kestää 1 sekunti
-                    }, 9000); // Vaihda uutinen 7 sekunnin välein
-                } else {
-                    document.getElementById("rssTitle").textContent = "No news available";
-                }
+                const article = data.articles[0];
+                document.getElementById('headline').innerText = article.title;
+                document.getElementById('news-image').src = article.image;
+                document.getElementById('qr-code').src = article.qr;
             } catch (error) {
-                console.error("Error fetching RSS feed:", error);
-                document.getElementById("rssTitle").textContent = "Failed to load news.";
+                console.error('RSS-syötteen haku epäonnistui', error);
             }
         }
-
-     function displayNews(item) {
-    // Päivitä otsikko ja kuvaus
-    document.getElementById("rssTitle").textContent = item.title;
-    document.getElementById("rssDescription").textContent =
-        (item.description || "").split(".")[0] + ".";
-
-    // Päivitä kuva
-    document.getElementById("rssImage").src = item.enclosure?.link || "default.jpg";
-
-    // Luo QR-koodi QRCode.js:llä
-    const qrCodeContainer = document.getElementById("qrCode");
-    qrCodeContainer.innerHTML = ""; // Tyhjennä vanha QR-koodi
-    if (item.guid) {
-        const qrCode = new QRCode(qrCodeContainer, {
-            text: item.guid,
-            width: 250,
-            height: 250,
-        });
-    } else {
-        qrCodeContainer.textContent = "QR-koodi ei saatavilla";
-    }
-}
-
-
-        function fadeOut() {
-            document.getElementById("leftSection").classList.remove("visible");
-        }
-
-        function fadeIn() {
-            document.getElementById("leftSection").classList.add("visible");
-        }
-
         fetchRSS();
-        
-window.onload = () => {
-    // Tunnista ikkunan leveys ja korkeus
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    // Laske kuvasuhde
-    const aspectRatio = width / height;
-
-    // Pystymallin ja vaakamallin tunnistus
-    if (aspectRatio > 1) {
-        // Vaakamallinen näyttö (esim. 16:9)
-        document.body.classList.add('landscape');
-        document.body.classList.remove('portrait');
-    } else {
-        // Pystymallinen näyttö (esim. 9:16)
-        document.body.classList.add('portrait');
-        document.body.classList.remove('landscape');
-    }
-};
-
-        
     </script>
 </body>
 </html>
