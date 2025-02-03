@@ -54,9 +54,14 @@
     <script>
         async function fetchRSS() {
             try {
+                console.log('Haetaan RSS-syöte...');
                 const response = await fetch('https://evis-kamua.github.io/hs/rss.json');
-                if (!response.ok) throw new Error('Verkkovastaus ei ollut ok');
+                console.log('Vastaus haettu, status:', response.status);
+                if (!response.ok) throw new Error('Verkkovastaus ei ollut ok, status: ' + response.status);
+                
                 const data = await response.json();
+                console.log('Haettu data:', data);
+                
                 if (!data.articles || data.articles.length === 0) throw new Error('Tyhjä RSS-syöte');
                 
                 const article = data.articles[0];
