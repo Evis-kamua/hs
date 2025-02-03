@@ -1,14 +1,14 @@
 {
   "articles": [
     {
-      "title": "Esimerkkiuutinen",
-      "image": "https://example.com/image.jpg",
-      "qr": "https://example.com/qr.png"
+      "title": "Hämeen Sanomat: Päivän uutinen",
+      "image": "https://evis-kamua.github.io/hs/example-news-image.jpg",
+      "qr": "https://evis-kamua.github.io/hs/example-qr-code.png"
     },
     {
-      "title": "Toinen uutinen",
-      "image": "https://example.com/image2.jpg",
-      "qr": "https://example.com/qr2.png"
+      "title": "Toinen uutinen Hämeen Sanomista",
+      "image": "https://evis-kamua.github.io/hs/example-news-image2.jpg",
+      "qr": "https://evis-kamua.github.io/hs/example-qr-code2.png"
     }
   ]
 }
