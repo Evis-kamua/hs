@@ -1,0 +1,20 @@
+const rssUrl = 'https://www.hameensanomat.fi/feed/'; // RSS-osoite
+const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+async function fetchRSS() {
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Verkkovastaus ei ollut ok');
+        const data = await response.json();
+        if (!data.items || data.items.length === 0) throw new Error('Tyhjä RSS-syöte');
+
+        const article = data.items[0];
+        document.getElementById('headline').innerText = article.title;
+        document.getElementById('news-image').src = article.thumbnail || 'placeholder.jpg';
+    } catch (error) {
+        console.error('RSS-syötteen haku epäonnistui:', error);
+        document.getElementById('headline').innerText = 'Uutisia ei voitu ladata';
+    }
+}
+
+fetchRSS();
