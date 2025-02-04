@@ -52,7 +52,7 @@
     </div>
 
     <script>
-  document.addEventListener("DOMContentLoaded", function () {
+ document.addEventListener("DOMContentLoaded", function () {
     async function fetchRSS() {
         try {
             console.log('Haetaan RSS-syöte...');
@@ -69,7 +69,7 @@
             const article = data.articles[0];
             console.log('Ensimmäinen uutinen:', article);
 
-            // Haetaan HTML-elementit ja tarkistetaan, löytyvätkö ne
+            // 🔥 Lisätään tarkistus: löytyvätkö HTML-elementit?
             const headlineElement = document.getElementById('headline');
             const newsImageElement = document.getElementById('news-image');
             const qrCodeElement = document.getElementById('qr-code');
@@ -80,11 +80,15 @@
                 qrCodeElement
             });
 
+            if (!headlineElement) console.error("❌ VIRHE: <div id='headline'> EI LÖYDY!");
+            if (!newsImageElement) console.error("❌ VIRHE: <img id='news-image'> EI LÖYDY!");
+            if (!qrCodeElement) console.error("❌ VIRHE: <img id='qr-code'> EI LÖYDY!");
+
             if (!headlineElement || !newsImageElement || !qrCodeElement) {
                 throw new Error('Yksi tai useampi HTML-elementti puuttuu');
             }
 
-            // Asetetaan sisältö vain, jos elementit löytyvät
+            // ✅ Asetetaan uutiset vain, jos elementit löytyvät
             headlineElement.innerText = article.title || 'Ei otsikkoa';
             newsImageElement.src = article.image || 'placeholder.jpg';
             qrCodeElement.src = article.qr || 'placeholder-qr.png';
@@ -96,6 +100,8 @@
         }
     }
     fetchRSS();
+});
+
 });
 
 });
