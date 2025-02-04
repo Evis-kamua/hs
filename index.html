@@ -29,6 +29,7 @@
         .headline {
             font-size: 2em;
             font-weight: bold;
+            margin-bottom: 20px;
         }
 
         .news-image {
@@ -44,10 +45,12 @@
 </head>
 <body>
     <div class="container">
-    <img class="news-image" id="news-image" src="hameensanomat.svg" alt="Uutiskuva" onerror="this.onerror=null; this.src='hameensanomat.svg';">
-<img id="qr-code" src="backup-qr.png" alt="QR-koodi" onerror="this.onerror=null; this.src='backup-qr.png';">
+        <!-- 🔥 LISÄTTY PUUTTUNUT OTSIKKO -->
+        <div class="headline" id="headline">Ladataan uutisia...</div> 
+
+        <img class="news-image" id="news-image" src="hameensanomat.svg" alt="Uutiskuva" onerror="this.onerror=null; this.src='hameensanomat.svg';">
         <div class="qr-code">
-            <img id="qr-code" src="" alt="QR-koodi">
+            <img id="qr-code" src="backup-qr.png" alt="QR-koodi" onerror="this.onerror=null; this.src='backup-qr.png';">
         </div>
     </div>
 
@@ -69,16 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const article = data.articles[0];
             console.log('📰 Ensimmäinen uutinen:', article);
 
-            // 🔥 Tarkistetaan, löytyvätkö HTML-elementit
+            // 🔥 Etsitään HTML-elementit
             const headlineElement = document.getElementById('headline');
             const newsImageElement = document.getElementById('news-image');
             const qrCodeElement = document.getElementById('qr-code');
 
-            console.log('🔍 HTML-elementit löydetty:', {
-                headlineElement,
-                newsImageElement,
-                qrCodeElement
-            });
+            console.log('🔍 HTML-elementit löydetty:', { headlineElement, newsImageElement, qrCodeElement });
 
             // ⚠️ VIRHEEN TARKISTUS: Ovatko elementit olemassa?
             if (!headlineElement || !newsImageElement || !qrCodeElement) {
@@ -89,9 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // ✅ Päivitetään sisältö
             headlineElement.innerText = article.title || 'Ei otsikkoa';
             newsImageElement.src = article.image || 'placeholder.jpg';
-            newsImageElement.alt = "Uutiskuva"; // Lisätään alt-teksti
+            newsImageElement.alt = "Uutiskuva";
             qrCodeElement.src = article.qr || 'placeholder-qr.png';
-            qrCodeElement.alt = "QR-koodi"; // Lisätään alt-teksti
+            qrCodeElement.alt = "QR-koodi";
 
         } catch (error) {
             console.error('❌ RSS-syötteen haku epäonnistui:', error);
@@ -100,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    fetchRSS(); // 🔥 Kutsutaan funktiota heti sivun latauduttua
+    fetchRSS();
 });
     </script>
 </body>
