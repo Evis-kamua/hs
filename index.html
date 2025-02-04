@@ -52,32 +52,41 @@
     </div>
 
     <script>
-        async function fetchRSS() {
-    try {
-        console.log('Haetaan RSS-syöte...');
-        const response = await fetch('https://evis-kamua.github.io/hs/rss.json', { cache: 'no-cache' });
-        
-        console.log('Vastaus haettu, status:', response.status);
-        if (!response.ok) throw new Error(`HTTP-virhe: ${response.status}`);
+   document.addEventListener("DOMContentLoaded", function () {
+    async function fetchRSS() {
+        try {
+            console.log('Haetaan RSS-syöte...');
+            const response = await fetch('https://evis-kamua.github.io/hs/rss.json', { cache: 'no-cache' });
 
-        const data = await response.json();
-        console.log('Haettu data:', JSON.stringify(data, null, 2)); // Tulostaa JSON:n
+            console.log('Vastaus haettu, status:', response.status);
+            if (!response.ok) throw new Error(`HTTP-virhe: ${response.status}`);
 
-        if (!data.articles || data.articles.length === 0) throw new Error('Tyhjä RSS-syöte');
+            const data = await response.json();
+            console.log('Haettu data:', JSON.stringify(data, null, 2));
 
-        const article = data.articles[0];
-        console.log('Ensimmäinen uutinen:', article);
+            if (!data.articles || data.articles.length === 0) throw new Error('Tyhjä RSS-syöte');
 
-        document.getElementById('headline').innerText = article.title || 'Ei otsikkoa';
-        document.getElementById('news-image').src = article.image || 'placeholder.jpg';
-        document.getElementById('qr-code').src = article.qr || 'placeholder-qr.png';
+            const article = data.articles[0];
+            console.log('Ensimmäinen uutinen:', article);
 
-    } catch (error) {
-        console.error('RSS-syötteen haku epäonnistui:', error);
-        document.getElementById('headline').innerText = 'Uutisia ei voitu ladata';
+            // Tarkistetaan että elementit löytyvät ennen kuin asetetaan niille arvoja
+            const headlineElement = document.getElementById('headline');
+            const newsImageElement = document.getElementById('news-image');
+            const qrCodeElement = document.getElementById('qr-code');
+
+            if (headlineElement) headlineElement.innerText = article.title || 'Ei otsikkoa';
+            if (newsImageElement) newsImageElement.src = article.image || 'placeholder.jpg';
+            if (qrCodeElement) qrCodeElement.src = article.qr || 'placeholder-qr.png';
+
+        } catch (error) {
+            console.error('RSS-syötteen haku epäonnistui:', error);
+            const headlineElement = document.getElementById('headline');
+            if (headlineElement) headlineElement.innerText = 'Uutisia ei voitu ladata';
+        }
     }
-}
-fetchRSS();
+    fetchRSS();
+});
+
     </script>
 </body>
 </html>
