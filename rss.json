@@ -2,7 +2,7 @@
   "articles": [
     {
       "title": "Hämeen Sanomat: Päivän uutinen",
-      "image": "https://evis-kamua.github.io/hs/example-news-image.jpg",
+      "image": "https://evis-kamua.github.io/hs/hameensanomat.svg",
       "qr": "https://evis-kamua.github.io/hs/backup-qr.png"
     }
   ]
