@@ -44,7 +44,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="headline" id="headline">Ladataan uutisia...</div>
+        <h1 class="headline" id="headline">Ladataan uutisia...</h1>
         <img class="news-image" id="news-image" src="placeholder.jpg" alt="Uutiskuva">
         <div class="qr-code">
             <img id="qr-code" src="placeholder-qr.png" alt="QR-koodi">
@@ -53,8 +53,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("🌐 DOM ladattu, aloitetaan RSS-haku!");
-            fetchRSS();
+            console.log("✅ DOM ladattu, aloitetaan RSS-haku!");
+            fetchRSS(); // Aloitetaan RSS-datan haku VASTA NYT!
         });
 
         async function fetchRSS() {
@@ -73,7 +73,7 @@
                 const article = data.articles[0];
                 console.log('📰 Ensimmäinen uutinen:', article);
 
-                // 🔥 Hae elementit VASTA NYT!
+                // 🔥 Hae elementit NYT, koska varmistettiin että ne ovat olemassa
                 const headlineElement = document.getElementById('headline');
                 const newsImageElement = document.getElementById('news-image');
                 const qrCodeElement = document.getElementById('qr-code');
