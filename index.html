@@ -13,7 +13,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: url('/hasa-bg.jpg') no-repeat center center;
+            background: url('https://github.com/Evis-kamua/hs/hasa-bg.jpg') no-repeat center center;
             background-size: cover;
             color: white;
             text-align: center;
@@ -58,7 +58,7 @@
     <div class="news-container">
         <h1 id="news-title">Ladataan uutisia...</h1>
         <div class="image-container">
-            <img id="news-image" src="" alt="Uutiskuva">
+            <img id="news-image" src="https://via.placeholder.com/800x400" alt="Uutiskuva">
             <div id="qrcode"></div>
         </div>
     </div>
@@ -76,11 +76,18 @@
                 const xml = parser.parseFromString(data.contents, "application/xml");
                 const items = xml.querySelectorAll("item");
                 
-                newsItems = Array.from(items).map(item => ({
-                    title: item.querySelector("title").textContent,
-                    link: item.querySelector("link").textContent,
-                    image: item.querySelector("media\\:content")?.getAttribute("url") || "https://via.placeholder.com/800x400"
-                }));
+                newsItems = Array.from(items).map(item => {
+                    let imageUrl = "https://via.placeholder.com/800x400";
+                    const mediaContent = item.getElementsByTagName("media:content")[0];
+                    if (mediaContent && mediaContent.getAttribute("url")) {
+                        imageUrl = mediaContent.getAttribute("url");
+                    }
+                    return {
+                        title: item.querySelector("title").textContent,
+                        link: item.querySelector("link").textContent,
+                        image: imageUrl
+                    };
+                });
                 showNews();
             } catch (error) {
                 console.error("Error fetching RSS feed", error);
