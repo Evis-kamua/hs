@@ -77,11 +77,17 @@
                 const items = xml.querySelectorAll("item");
                 
                 newsItems = Array.from(items).map(item => {
-                    let imageUrl = "https://via.placeholder.com/800x400";
-                    const mediaContent = item.getElementsByTagName("media:content")[0];
-                    if (mediaContent && mediaContent.getAttribute("url")) {
-                        imageUrl = mediaContent.getAttribute("url");
-                    }
+                    let imageUrl = "https://placehold.co/800x400"; // Varmuuden vuoksi varakuva
+const enclosure = item.querySelector("enclosure");
+if (enclosure && enclosure.getAttribute("url")) {
+    imageUrl = enclosure.getAttribute("url");
+}
+
+                 const mediaContent = item.getElementsByTagName("media:content")[0];
+if (mediaContent && mediaContent.getAttribute("url")) {
+    imageUrl = mediaContent.getAttribute("url");
+}
+
                     return {
                         title: item.querySelector("title").textContent,
                         link: item.querySelector("link").textContent,
