@@ -12,36 +12,59 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             background: url('https://raw.githubusercontent.com/Evis-kamua/hs/refs/heads/main/hasa-bg.jpg') no-repeat center center;
             background-size: cover;
-            color: white;
-            text-align: center;
+@@ -20,45 +19,60 @@
             font-family: Arial, sans-serif;
         }
         .news-container {
             position: absolute;
             top: 10%;
-            width: 88%; /* Increased by 10% */
-            max-width: 1320px; /* Increased by 10% */
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto;
+            gap: 20px;
+            width: 80%;
+            max-width: 1200px;
             text-align: left;
-            transform: translateY(-150px) scale(1.1); /* Move up 150px and scale up by 10% */
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
         }
         h1 {
             font-size: 3rem;
+        .news-title {
+            font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+            padding: 20px;
         }
         .image-container {
             display: flex;
             justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
         img {
             width: 60%;
+            width: 100%;
             max-height: 400px;
             object-fit: cover;
             border-radius: 10px;
+        }
+        .qrcode-container {
+            grid-column: 2;
+            grid-row: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
         }
         #qrcode {
             width: 128px;
@@ -58,30 +81,32 @@
 <body>
     <div class="news-container">
         <h1 id="news-title">Ladataan uutisia...</h1>
+        <div class="news-title" id="news-title">Ladataan uutisia...</div>
         <div class="image-container">
+            <img id="news-image" src="https://placehold.co/800x400" alt="Uutiskuva">
             <img id="news-image" src="https://via.placeholder.com/800x400" alt="Uutiskuva">
+        </div>
+        <div class="qrcode-container">
             <div id="qrcode"></div>
         </div>
     </div>
-    
-    <script>
-        const RSSFeed = "https://www.hameensanomat.fi/feed/rss/";
-        let newsItems = [];
-        let index = 0;
-
-        async function fetchRSS() {
-            try {
-                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(RSSFeed)}`);
-                const data = await response.json();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(data.contents, "application/xml");
+@@ -77,45 +91,39 @@
                 const items = xml.querySelectorAll("item");
-                
+
                 newsItems = Array.from(items).map(item => {
+                    let imageUrl = "https://placehold.co/800x400"; // Varmuuden vuoksi varakuva
+const enclosure = item.querySelector("enclosure");
+if (enclosure && enclosure.getAttribute("url")) {
+    imageUrl = enclosure.getAttribute("url");
+}
+                 const mediaContent = item.getElementsByTagName("media:content")[0];
+if (mediaContent && mediaContent.getAttribute("url")) {
+    imageUrl = mediaContent.getAttribute("url");
+}
                     let imageUrl = "https://via.placeholder.com/800x400";
-                    const mediaContent = item.getElementsByTagName("media:content")[0];
-                    if (mediaContent && mediaContent.getAttribute("url")) {
-                        imageUrl = mediaContent.getAttribute("url");
+                    const enclosure = item.getElementsByTagName("enclosure")[0];
+                    if (enclosure && enclosure.getAttribute("url")) {
+                        imageUrl = enclosure.getAttribute("url");
                     }
                     return {
                         title: item.querySelector("title").textContent,
