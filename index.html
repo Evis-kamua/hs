@@ -9,8 +9,9 @@
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             background: url('https://raw.githubusercontent.com/Evis-kamua/hs/refs/heads/main/hasa-bg.jpg') no-repeat center center;
             background-size: cover;
@@ -19,43 +20,28 @@
             font-family: Arial, sans-serif;
         }
         .news-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: auto;
-            gap: 20px;
-            width: 80%;
-            max-width: 1200px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .news-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute;
+            top: 10%;
+            width: 88%; /* Increased by 10% */
+            max-width: 1320px; /* Increased by 10% */
             text-align: left;
-            padding: 20px;
+            transform: translateY(-150px) scale(1.1); /* Move up 150px and scale up by 10% */
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
         .image-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
         }
         img {
-            width: 100%;
+            width: 60%;
             max-height: 400px;
             object-fit: cover;
             border-radius: 10px;
-        }
-        .qrcode-container {
-            grid-column: 2;
-            grid-row: 2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
         }
         #qrcode {
             width: 128px;
@@ -64,15 +50,16 @@
             padding: 10px;
             border-radius: 10px;
         }
+        .fade {
+            transition: opacity 1s ease-in-out;
+        }
     </style>
 </head>
 <body>
     <div class="news-container">
-        <div class="news-title" id="news-title">Ladataan uutisia...</div>
+        <h1 id="news-title">Ladataan uutisia...</h1>
         <div class="image-container">
             <img id="news-image" src="https://via.placeholder.com/800x400" alt="Uutiskuva">
-        </div>
-        <div class="qrcode-container">
             <div id="qrcode"></div>
         </div>
     </div>
@@ -92,9 +79,9 @@
                 
                 newsItems = Array.from(items).map(item => {
                     let imageUrl = "https://via.placeholder.com/800x400";
-                    const enclosure = item.getElementsByTagName("enclosure")[0];
-                    if (enclosure && enclosure.getAttribute("url")) {
-                        imageUrl = enclosure.getAttribute("url");
+                    const mediaContent = item.getElementsByTagName("media:content")[0];
+                    if (mediaContent && mediaContent.getAttribute("url")) {
+                        imageUrl = mediaContent.getAttribute("url");
                     }
                     return {
                         title: item.querySelector("title").textContent,
