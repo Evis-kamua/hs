@@ -13,14 +13,41 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #1e3a8a;
+            background: url('/mnt/data/hasa-bg.jpg') no-repeat center center;
+            background-size: cover;
             color: white;
             text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .news-container {
+            position: absolute;
+            top: 10%;
+            width: 80%;
+            max-width: 1200px;
+            text-align: left;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
+            width: 60%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        #qrcode {
+            width: 128px;
+            height: 128px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
         }
         .fade {
             transition: opacity 1s ease-in-out;
@@ -28,9 +55,13 @@
     </style>
 </head>
 <body>
-    <h1 id="news-title">Ladataan uutisia...</h1>
-    <img id="news-image" src="" alt="Uutiskuva">
-    <div id="qrcode"></div>
+    <div class="news-container">
+        <h1 id="news-title">Ladataan uutisia...</h1>
+        <div class="image-container">
+            <img id="news-image" src="" alt="Uutiskuva">
+            <div id="qrcode"></div>
+        </div>
+    </div>
     
     <script>
         const RSSFeed = "https://www.hameensanomat.fi/feed/rss/";
